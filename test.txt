@@ -1,0 +1,62 @@
+[
+    {
+        "Height": 0,
+        "Blocksize": 1,
+        "BlockHeader": {
+            "bits": "ffff001f",
+            "timestamp": 1692624756,
+            "merkleRoot": "01d3c8ffac385f49854b12bc69248645efddb80a0435dd09631643bdc605d1d1",
+            "prevBlockHash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "version": 1,
+            "nonce": 52879,
+            "blockHash": "00001037bff589288c44d4294b840b974b6f412d321c8aab3886ea61a9d2ddd1"
+        },
+        "TxCount": 1,
+        "Txs": "Code Architect sent 0 Bitcoins to Indranil"
+    },
+    {
+        "Height": 1,
+        "Blocksize": 1,
+        "BlockHeader": {
+            "bits": "ffff001f",
+            "timestamp": 1692624771,
+            "merkleRoot": "ede8645e1159205c35365fc6b765fbea7acab3d30d83f2094e87b1dc2829b69b",
+            "prevBlockHash": "00001037bff589288c44d4294b840b974b6f412d321c8aab3886ea61a9d2ddd1",
+            "version": 1,
+            "nonce": 29018,
+            "blockHash": "00003fde2fa0db36931e389f003c7b73c023ab7b764ad0787fa601c8b02e9ab0"
+        },
+        "TxCount": 1,
+        "Txs": "Code Architect sent 1 Bitcoins to Indranil"
+    },
+    {
+        "Height": 2,
+        "Blocksize": 1,
+        "BlockHeader": {
+            "bits": "ffff001f",
+            "timestamp": 1692624778,
+            "merkleRoot": "ee3d44bff24ade0bd29fbf90bcfa1a8a2ef2c991a92bf92e8e8d7bf85cf75e30",
+            "prevBlockHash": "00003fde2fa0db36931e389f003c7b73c023ab7b764ad0787fa601c8b02e9ab0",
+            "version": 1,
+            "nonce": 27230,
+            "blockHash": "00005ad8ab369e6c399cbbf13170ecb403e4d103f3d7c3f1bce28946e672fb23"
+        },
+        "TxCount": 1,
+        "Txs": "Code Architect sent 2 Bitcoins to Indranil"
+    },
+    {
+        "Height": 3,
+        "Blocksize": 1,
+        "BlockHeader": {
+            "bits": "ffff001f",
+            "timestamp": 1692624784,
+            "merkleRoot": "d0249e654794fa76a823925895732057dc5c51075131f4784a65d31f93754113",
+            "prevBlockHash": "00005ad8ab369e6c399cbbf13170ecb403e4d103f3d7c3f1bce28946e672fb23",
+            "version": 1,
+            "nonce": 89050,
+            "blockHash": "0000a4906e8daed09d5ad654ec4d6d119a060483b7f91e0f931cb68c98e28d88"
+        },
+        "TxCount": 1,
+        "Txs": "Code Architect sent 3 Bitcoins to Indranil"
+    }
+]
