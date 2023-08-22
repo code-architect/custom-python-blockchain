@@ -7,6 +7,7 @@ sys.path.append('D:/xampp/htdocs/sand_box/get_job/custom-python-blockchain')
 from Blockchain.Backend.core.block import Block
 from Blockchain.Backend.core.blockheader import BlockHeader
 from Blockchain.Backend.util.util import hash256
+from Blockchain.Backend.core.database.database import BlockchainDB
 
 ZERO_HASH = '0' * 64
 VERSION = 1
@@ -14,8 +15,15 @@ VERSION = 1
 
 class Blockchain:
     def __init__(self):
-        self.chain = []
         self.GenesisBlock()
+
+    def write_on_disk(self, block):
+        blockchainDB = BlockchainDB()
+        blockchainDB.write(block)
+
+    def fetch_last_block(self):
+        blockchainDB = BlockchainDB()
+        return blockchainDB.lastBlock()
 
     def GenesisBlock(self):
         BlockHeight = 0
@@ -30,14 +38,15 @@ class Blockchain:
         blockheader = BlockHeader(version=VERSION, prevBlockHash=prevBlockHash, merkleRoot=merkleRoot,
                                   timestamp=timestamp, bits=bits)
         blockheader.mine()
-        self.chain.append(Block(BlockHeight, 1, blockheader.__dict__, 1, Transaction).__dict__)
-        print(json.dumps(self.chain, indent=4))
+        self.write_on_disk([Block(BlockHeight, 1, blockheader.__dict__, 1, Transaction).__dict__])
 
     def main(self):
         while True:
-            lastBlock = self.chain[::-1]
-            BlockHeight = lastBlock[0]["Height"] + 1
-            prevBlockHash = lastBlock[0]["BlockHeader"]["blockHash"]
+            lastBlock = self.fetch_last_block()
+            print(json.dumps(lastBlock, indent=4))
+            sys.exit()
+            BlockHeight = lastBlock["Height"] + 1
+            prevBlockHash = lastBlock["BlockHeader"]["blockHash"]
             self.addBlock(BlockHeight, prevBlockHash)
 
 
