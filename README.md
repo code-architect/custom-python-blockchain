@@ -7,4 +7,4 @@ Under Backend, `core` and `util`.
 Height, Blocksize, BlockHeader, TxCount, Txs` variables
 3. Create a new module `blockheader.py`, create a class call `BlockHeader`. Inside the `__init__` method will take 
 `version, prevBlockHash, merkleRoot, timestamp, bits` and declare `self.nonce = 0 , self.blockHash = ''`
-4. Create a 
+4. 

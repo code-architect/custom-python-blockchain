@@ -43,8 +43,6 @@ class Blockchain:
     def main(self):
         while True:
             lastBlock = self.fetch_last_block()
-            print(json.dumps(lastBlock, indent=4))
-            sys.exit()
             BlockHeight = lastBlock["Height"] + 1
             prevBlockHash = lastBlock["BlockHeader"]["blockHash"]
             self.addBlock(BlockHeight, prevBlockHash)
