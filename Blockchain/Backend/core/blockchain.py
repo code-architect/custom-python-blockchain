@@ -36,7 +36,7 @@ class Blockchain:
         coinbaseInstance = Coinbase(BlockHeight)
         coinbaseTx = coinbaseInstance.CoinbaseTransaction()
 
-        merkleRoot = ' '
+        merkleRoot = coinbaseTx.TxId
         bits = 'ffff001f'
         blockheader = BlockHeader(version=VERSION, prevBlockHash=prevBlockHash, merkleRoot=merkleRoot,
                                   timestamp=timestamp, bits=bits)

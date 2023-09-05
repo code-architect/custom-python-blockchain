@@ -1,5 +1,5 @@
 from Blockchain.Backend.core.Script import Script
-from Blockchain.Backend.util.util import int_to_little_endian, bytes_needed, decode_base58, little_endian_to_int
+from Blockchain.Backend.util.util import int_to_little_endian, bytes_needed, decode_base58, little_endian_to_int, encode_varint, hash256
 
 ZERO_HASH = b'\0' * 32
 REWARD = 50
@@ -24,8 +24,10 @@ class Coinbase:
         target_h160 = decode_base58(MINER_ADDRESS)
         target_script = Script.p2pkh_script(target_h160)
         tx_outs.append(TxOut(amount=target_amount, script_pubkey=target_script))
+        coinBaseTx = Tx(1, tx_ins, tx_outs, 0)
+        coinBaseTx.TxId = coinBaseTx.id()
 
-        return Tx(1, tx_ins, tx_outs, 0)
+        return coinBaseTx
 
 
 class Tx:
@@ -34,6 +36,28 @@ class Tx:
         self.tx_outs = tx_outs
         self.tx_ins = tx_ins
         self.version = version
+
+    def serialize(self):
+        """ tx_ins are tx_outs objects, so weed a separate function to convert them """
+        result = int_to_little_endian(self.version, 4)
+        result += encode_varint(len(self.tx_ins))
+        for tx_in in self.tx_ins:
+            result += tx_in.serialize()
+
+        result += encode_varint(len(self.tx_outs))
+        for tx_out in self.tx_outs:
+            result += tx_out.serialize()
+
+        result += int_to_little_endian(self.locktime, 4)
+        return result
+
+    def id(self):
+        """Human-readable Tx id"""
+        return self.hash().hex()
+
+    def hash(self):
+        """Binary Hash of serialization"""
+        return hash256(self.serialize())[::-1]
 
     def is_coinbase(self):
         """
@@ -96,8 +120,14 @@ class TxIn:
             self.script_sig = Script()
         else:
             self.script_sig = script_sig
-
         self.sequence = sequence
+
+    def serialize(self):
+        result = self.prev_tx[::-1]
+        result += int_to_little_endian(self.prev_index, 4)
+        result += self.script_sig.serialize()
+        result += int_to_little_endian(self.sequence, 4)
+        return result
 
 
 class TxOut:
@@ -108,3 +138,8 @@ class TxOut:
         """
         self.amount = amount
         self.script_pubkey = script_pubkey
+
+    def serialize(self):
+        result = int_to_little_endian(self.amount, 8)
+        result += self.script_pubkey.serialize()
+        return result
