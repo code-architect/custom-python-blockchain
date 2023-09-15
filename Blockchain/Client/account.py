@@ -4,6 +4,7 @@ import secrets
 sys.path.append('D:/xampp/htdocs/sand_box/get_job/custom-python-blockchain')
 from Blockchain.Backend.core.EllepticCurve.EllepticCurve import Sha256Point
 from Blockchain.Backend.util.util import hash160, hash256
+from Blockchain.Backend.core.database.database import AccountDB
 
 
 class Account:
@@ -14,9 +15,9 @@ class Account:
 
         G = Sha256Point(Gx, Gy)
 
-        privateKey = secrets.randbits(256)
+        self.privateKey = secrets.randbits(256)
 
-        unCompressedPublicKey = privateKey * G
+        unCompressedPublicKey = self.privateKey * G
         xpoint = unCompressedPublicKey.x
         ypoint = unCompressedPublicKey.y
 
@@ -52,10 +53,11 @@ class Account:
             num, mod = divmod(num, 58)
             result = BASE58_ALPHABET[mod] + result
 
-        PublicAddress = prefix + result
-        return {"private Key": privateKey, "Public Address": PublicAddress}
+        self.PublicAddress = prefix + result
+        return {"private Key": self.privateKey, "Public Address": self.PublicAddress}
 
 
 if __name__ == '__main__':
     account = Account()
     print(account.createKeys())
+    AccountDB().write([account.__dict__])

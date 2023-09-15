@@ -1,10 +1,12 @@
 from Blockchain.Backend.core.Script import Script
-from Blockchain.Backend.util.util import int_to_little_endian, bytes_needed, decode_base58, little_endian_to_int, encode_varint, hash256
+from Blockchain.Backend.util.util import int_to_little_endian, bytes_needed, decode_base58, little_endian_to_int, \
+    encode_varint, hash256
 
 ZERO_HASH = b'\0' * 32
 REWARD = 50
 PRIVATE_KEY = '56114968769095885066321288702375272595970830268400415922098497799492460020984'
 MINER_ADDRESS = '1K3if2mFojLAWVtdD1eeYYKNVCwghpBvgb'
+SIGHASH_ALL = 1
 
 
 class Coinbase:
@@ -76,6 +78,31 @@ class Tx:
             return False
 
         return True
+
+    def sigh_hash(self, input_index, script_pubkey):
+        s = int_to_little_endian(self.version, 4)
+        s += encode_varint(len(self.tx_ins))
+        for i, tx_in in enumerate(self.tx_ins):
+            if i == input_index:
+                s += TxIn(tx_in.prev_tx, tx_in.prev_index, script_pubkey).serialize()
+            else:
+                s += TxIn(tx_in.prev_tx, tx_in.prev_index).serialize()
+
+        s += encode_varint(len(self.tx_outs))
+        for tx_out in self.tx_outs:
+            s += tx_out.serialize()
+
+        s += int_to_little_endian(self.locktime, 4)
+        s += int_to_little_endian(SIGHASH_ALL, 4)
+        h256 = hash256(s)
+        return int.from_bytes(h256, 'big')
+
+    def sign_input(self, input_index, private_key, script_pubkey):
+        z = self.sigh_hash(input_index, script_pubkey)
+        der = private_key.sign(z).der()
+        sig = der + SIGHASH_ALL.to_bytes(1, "big")
+        sec = private_key.point.sec()
+        self.tx_ins[input_index].script_sig = Script([sig, sec])
 
     def to_dict(self):
         """
